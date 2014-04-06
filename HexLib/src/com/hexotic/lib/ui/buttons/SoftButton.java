@@ -21,6 +21,7 @@ import com.hexotic.lib.themes.ThemeFactory;
 
 public class SoftButton extends JButton{
 
+	private static final long serialVersionUID = -5068382421001647103L;
 	private Color backgroundColor = ThemeFactory.getInstance().getTheme(ThemeFactory.DEFAULT).getBackgroundColor();
 	private Color foregroundColor = ThemeFactory.getInstance().getTheme(ThemeFactory.DEFAULT).getForeground();
 	private Font font = ThemeFactory.getInstance().getTheme(ThemeFactory.DEFAULT).getFont();
@@ -115,7 +116,7 @@ public class SoftButton extends JButton{
 	    if(!isHover){
 	    	colors = new Color[]{backgroundColor.brighter(), backgroundColor, backgroundColor, backgroundColor.darker()};
 	    } else if(offset > 0){
-	    	colors = new Color[]{backgroundColor.darker(), backgroundColor, backgroundColor.darker(), backgroundColor};
+	    	colors = new Color[]{backgroundColor.darker(), backgroundColor, backgroundColor, backgroundColor.darker()};
 	    } else {
 	    	colors = new Color[]{backgroundColor.brighter(), backgroundColor, backgroundColor, backgroundColor.brighter()};
 	    }

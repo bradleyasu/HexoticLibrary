@@ -12,15 +12,13 @@ public class DefaultTheme implements Theme{
 	private Color[] palette;
 	
 	public DefaultTheme(){
-		this.background = new Color(0xf2f2f2);
-		this.forground = new Color(0x323232);
+		this.background = new Color(0xdadada);
+		this.forground = new Color(0xfefefe);
 		this.font = new Font("Arial", Font.BOLD, 14);
 		this.fontColor = new Color(0x010101);
-		palette = new Color[]{new Color(0x010101), 
-							  new Color(0x858D83), 
-							  new Color(0xDADBDA), 
-							  new Color(0x343833), 
-							  new Color(0x222B21)};
+		palette = new Color[]{new Color(0xff6868), 
+							  new Color(0xff68fe), 
+							  new Color(0xff69b4)};
 	}
 	
 	@Override

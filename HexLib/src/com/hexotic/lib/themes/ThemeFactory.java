@@ -1,5 +1,7 @@
 package com.hexotic.lib.themes;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +85,7 @@ public class ThemeFactory {
 		}
 		return ret;
 	}
-	
+
 	public static ThemeFactory getInstance(){
 		if (instance == null){
 			instance = new ThemeFactory();
