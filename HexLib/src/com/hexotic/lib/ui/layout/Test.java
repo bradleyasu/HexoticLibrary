@@ -47,19 +47,13 @@ public class Test extends JFrame{
 			ComparePanel panel = new ComparePanel(i);
 			panel.setBackground(color);
 			panel.setBorder(BorderFactory.createLineBorder(Color.black));
-			panel.setPreferredSize(new Dimension(rand.nextInt(50)+100,rand.nextInt(50)+100));
+			panel.setPreferredSize(new Dimension(100,rand.nextInt(50)+100));
 			panel.add(new JButton("Hello "+i));
 			parent.add(panel);
 			panels.add(panel);
 			color = color.brighter().brighter();
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 		}
-		panels.get(2).setVisible(false);
 		
 	}
 	
