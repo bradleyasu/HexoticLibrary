@@ -84,7 +84,9 @@ public class Test extends JFrame{
 				System.out.println(e.getState());
 			}
 			
-		});		
+		});	
+		
+		sw.setState(true);
 		panel.add(sw);
 		
 		this.add(panel);

@@ -81,6 +81,7 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	 */
 	public AnimatedGridLayout(int vgap, int hgap, boolean ordered) {
 		timer.setInitialDelay(refreshRate);
+		timer.start(); 		
 		this.vgap = vgap;
 		this.hgap = hgap;
 		if (ordered) {
@@ -209,9 +210,8 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	@Override
 	public void addLayoutComponent(Component comp, Object constraints) {
 		// TODO Auto-generated method stub
-		try {
-			Thread.sleep(2);
-		} catch (InterruptedException ex) {		}
+		comp.revalidate();
+		comp.repaint();
 
 	}
 
@@ -230,7 +230,7 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	@Override
 	public void invalidateLayout(Container target) {
 		// TODO Auto-generated method stub
-		timer.start(); 
+		
 	}
 
 	@Override
@@ -290,6 +290,5 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 				}
 			}
 			working = false;
-			timer.stop();
 	}
 }

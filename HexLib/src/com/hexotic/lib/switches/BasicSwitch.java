@@ -154,15 +154,19 @@ public class BasicSwitch extends JPanel implements Runnable{
 	 * Toggle the switch
 	 */
 	public void throwSwitch(){
-		on = !on;
-		new Thread(this).start();
+		setState(!on);
 		for (SwitchListener listener : listeners)
 			listener.switchTriggered(new SwitchEvent(on ? SwitchEvent.ON : SwitchEvent.OFF));
 	}
 	
+	public void setState(boolean on){
+		this.on = on;
+		new Thread(this).start();
+	}
+	
 	@Override
 	public void run(){
-		while(isRunning){
+		while(isRunning || !this.isVisible()){
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}	
@@ -217,9 +221,17 @@ public class BasicSwitch extends JPanel implements Runnable{
 		if(on){
 			int StringWidth = (int)metrics.getStringBounds(offText,g2d).getWidth();
 			g2d.drawString(offText, getWidth()/4 - StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
+			
+			g2d.setColor(background.darker());
+			StringWidth = (int)metrics.getStringBounds(onText,g2d).getWidth();
+			g2d.drawString(onText, getWidth()/2 + getWidth()/4 -  StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 		} else {
 			int StringWidth = (int)metrics.getStringBounds(onText,g2d).getWidth();
 			g2d.drawString(onText, getWidth()/2 + getWidth()/4 -  StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
+			
+			g2d.setColor(background.darker());
+			StringWidth = (int)metrics.getStringBounds(offText,g2d).getWidth();
+			g2d.drawString(offText, getWidth()/4 - StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 		}
 	}
 	

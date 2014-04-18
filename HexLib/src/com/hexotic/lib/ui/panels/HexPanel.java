@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.Point;
 import java.awt.RadialGradientPaint;
@@ -39,7 +40,7 @@ public class HexPanel extends JPanel{
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);       
 		Graphics2D g2d = (Graphics2D) g.create();
-		
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		 Point2D center = new Point2D.Float(getWidth()/2,getHeight()+50);
 	     float radius = getWidth();
 	     float[] dist = {0.0f, 1.0f};
@@ -47,7 +48,6 @@ public class HexPanel extends JPanel{
 		RadialGradientPaint p = new RadialGradientPaint(center, radius,
 		                                 dist, colors,
 		                                 CycleMethod.NO_CYCLE);
-		
 		//g2d.setPaint(new GradientPaint(new Point(0, 0), theme.getBackgroundColor(), new Point(0,getHeight()), theme.getBackgroundColor().darker()));
 		g2d.setPaint(p);
 		g2d.fillRect(0,0, getWidth(), getHeight());
