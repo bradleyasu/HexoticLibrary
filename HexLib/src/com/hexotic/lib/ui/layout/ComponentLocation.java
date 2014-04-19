@@ -42,7 +42,7 @@ public class ComponentLocation {
 	
 	public ComponentLocation update(){
 		hasChanged = false;
-		if (x != currentX){
+		if (x != currentX && Math.abs(x-currentX) > 1){
 			if(x < currentX){
 				currentX -= ((currentX-x)/2);
 				hasChanged = true;
@@ -52,7 +52,7 @@ public class ComponentLocation {
 				hasChanged = true;
 			}
 		}
-		if (y != currentY){
+		if (y != currentY  && Math.abs(y-currentY) > 1){
 			if(y < currentY){
 				currentY -= ((currentY-y)/2);
 				hasChanged = true;

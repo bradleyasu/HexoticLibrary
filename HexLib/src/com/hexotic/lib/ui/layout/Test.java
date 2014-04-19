@@ -47,7 +47,7 @@ public class Test extends JFrame{
 			ComparePanel panel = new ComparePanel(i);
 			panel.setBackground(color);
 			panel.setBorder(BorderFactory.createLineBorder(Color.black));
-			panel.setPreferredSize(new Dimension(100,rand.nextInt(50)+100));
+			panel.setPreferredSize(new Dimension(100,100));
 			panel.add(new JButton("Hello "+i));
 			parent.add(panel);
 			panels.add(panel);

@@ -222,14 +222,14 @@ public class BasicSwitch extends JPanel implements Runnable{
 			int StringWidth = (int)metrics.getStringBounds(offText,g2d).getWidth();
 			g2d.drawString(offText, getWidth()/4 - StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 			
-			g2d.setColor(background.darker());
+			g2d.setColor(foreground.darker().darker());
 			StringWidth = (int)metrics.getStringBounds(onText,g2d).getWidth();
 			g2d.drawString(onText, getWidth()/2 + getWidth()/4 -  StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 		} else {
 			int StringWidth = (int)metrics.getStringBounds(onText,g2d).getWidth();
 			g2d.drawString(onText, getWidth()/2 + getWidth()/4 -  StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 			
-			g2d.setColor(background.darker());
+			g2d.setColor(foreground.darker().darker());
 			StringWidth = (int)metrics.getStringBounds(offText,g2d).getWidth();
 			g2d.drawString(offText, getWidth()/4 - StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 		}

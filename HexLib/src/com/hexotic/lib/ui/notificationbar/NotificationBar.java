@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -16,8 +15,8 @@ import com.hexotic.lib.ui.buttons.SoftButton;
 
 public class NotificationBar extends JPanel{
 
-	private final String resource = "resources/images/";
-	private ClassLoader cldr = this.getClass().getClassLoader();
+	private static final long serialVersionUID = 6047982077151477833L;
+	private final String resource = "/resources/images/";
 	private Color[] colors;
 	private ImageIcon[] icons;
 
@@ -37,7 +36,10 @@ public class NotificationBar extends JPanel{
 			this.add(icon, BorderLayout.WEST);
 			this.add(message, BorderLayout.CENTER);
 			this.add(optionsPanel, BorderLayout.EAST);
-		} catch (MalformedURLException e) {}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void setCollapsed(boolean collapsed){
@@ -82,10 +84,10 @@ public class NotificationBar extends JPanel{
 				new Color(0xcaffa2)
 		};
 		icons = new ImageIcon[]{
-			new ImageIcon(new URL(cldr.getResource(resource)+"information.png")),
-			new ImageIcon(new URL(cldr.getResource(resource)+"error.png")),
-			new ImageIcon(new URL(cldr.getResource(resource)+"exclamation.png")),
-			new ImageIcon(new URL(cldr.getResource(resource)+"accept.png"))
+			new ImageIcon(this.getClass().getResource(resource+"information.png")),
+			new ImageIcon(this.getClass().getResource(resource+"error.png")),
+			new ImageIcon(this.getClass().getResource(resource+"exclamation.png")),
+			new ImageIcon(this.getClass().getResource(resource+"accept.png"))
 		};
 		icon = new JLabel(icons[0]);
 		icon.setPreferredSize(new Dimension(24,24));

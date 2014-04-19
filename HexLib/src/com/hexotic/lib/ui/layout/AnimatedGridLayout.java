@@ -31,12 +31,13 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	private int minWidth = 0, minHeight = 0;
 	private int preferredWidth = 0, preferredHeight = 0;
 	private boolean sizeUnknown = true;
-	private int refreshRate = 40;
+	private int refreshRate = 10;
 	private ComponentLocation lastLocation = null;
 	private boolean working = false;
 	
 	private Timer timer = new Timer(refreshRate, this);
 
+	private List<Component> queue = new ArrayList<Component>();
 	private Map<Component, ComponentLocation> components;
 
 	/**
@@ -81,7 +82,6 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	 */
 	public AnimatedGridLayout(int vgap, int hgap, boolean ordered) {
 		timer.setInitialDelay(refreshRate);
-		timer.start(); 		
 		this.vgap = vgap;
 		this.hgap = hgap;
 		if (ordered) {
@@ -95,7 +95,7 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
-
+		
 	}
 
 	@Override
@@ -111,21 +111,6 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 		if (sizeUnknown) {
 			setSizes(parent);
 		}
-		for (int i = 0; i < parent.getComponentCount(); i++) {
-			Component comp = parent.getComponent(i);
-			Dimension d = comp.getPreferredSize();
-			int[] next = nextXY(d.width, d.height, maxWidth);
-			if (!components.containsKey(comp) && comp.isVisible()) {
-				lastLocation = new ComponentLocation(next[0], next[1], d.width,
-						d.height);
-				if (!working) { /*
-								 * If the UI is being updated, we'll add it next
-								 * time around
-								 */
-					components.put(parent.getComponent(i), lastLocation);
-				}
-			}
-		}
 
 		int compCount = 0;
 		int rowCount = 0;
@@ -133,7 +118,6 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 		List<ComponentLocation> prevStac = new ArrayList<ComponentLocation>();
 
 		for (Component comp : components.keySet()) {
-			
 			if (comp.isVisible()) {
 				if (x + components.get(comp).getWidth() + hgap >= maxWidth) {
 					x = hgap;
@@ -203,13 +187,31 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 
 	@Override
 	public void removeLayoutComponent(Component comp) {
-		// TODO Auto-generated method stub
-
+		components.remove(comp);
+		timer.start();
+		comp.revalidate();
+		comp.repaint();
 	}
 
 	@Override
 	public void addLayoutComponent(Component comp, Object constraints) {
-		// TODO Auto-generated method stub
+		Dimension d = comp.getPreferredSize();
+		int[] next = nextXY(d.width, d.height, minWidth);
+		lastLocation = new ComponentLocation(next[0], next[1], d.width, d.height);
+
+		if(!working){
+			for(Component c : queue){
+				components.put(c, lastLocation);
+				Dimension de = c.getPreferredSize();
+				int[] ne = nextXY(de.width, de.height, minWidth);
+				lastLocation = new ComponentLocation(ne[0], ne[1], de.width, de.height);
+			}
+			components.put(comp, lastLocation);
+			queue.clear();
+		} else {
+			queue.add(comp);
+		}
+		timer.start();
 		comp.revalidate();
 		comp.repaint();
 
@@ -230,7 +232,8 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	@Override
 	public void invalidateLayout(Container target) {
 		// TODO Auto-generated method stub
-		
+		timer.start();
+		target.repaint();
 	}
 
 	@Override
@@ -279,15 +282,35 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e){
 			working = true;
+			boolean done = true;
+			
+			if(queue.size() > 0){
+				for(Component c : queue){
+					components.put(c, lastLocation);
+					Dimension de = c.getPreferredSize();
+					int[] ne = nextXY(de.width, de.height, minWidth);
+					lastLocation = new ComponentLocation(ne[0], ne[1], de.width, de.height);
+				}
+				queue.clear();
+			}
+			
 			for (Component comp : components.keySet()) {
 				if (comp.isVisible()) {
 					ComponentLocation loc = components.get(comp).update();
 					comp.setBounds(loc.getCurrentX(),
 							loc.getCurrentY(), loc.getWidth(),
 							loc.getHeight());
+					if(!loc.hasChanged()){
+						done = true;
+					} else {
+						done = false;
+					}
 					comp.revalidate();
 					comp.repaint();
 				}
+			}
+			if(done){
+				timer.stop();
 			}
 			working = false;
 	}
