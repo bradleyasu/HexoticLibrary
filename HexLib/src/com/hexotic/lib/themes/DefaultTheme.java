@@ -12,8 +12,8 @@ public class DefaultTheme implements Theme{
 	private Color[] palette;
 	
 	public DefaultTheme(){
-		this.background = new Color(0xdadada);
-		this.forground = new Color(0xfefefe);
+		this.background = new Color(0xfdfdfd);
+		this.forground = new Color(0xffffff);
 		this.font = new Font("Arial", Font.BOLD, 14);
 		this.fontColor = new Color(0x010101);
 		palette = new Color[]{new Color(0xff6868), 

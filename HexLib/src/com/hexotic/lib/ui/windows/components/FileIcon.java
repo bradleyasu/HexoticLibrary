@@ -3,6 +3,7 @@ package com.hexotic.lib.ui.windows.components;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -10,14 +11,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
+import javax.swing.filechooser.FileSystemView;
 public class FileIcon extends JPanel implements MouseListener, Comparable<FileIcon>{
 
 	private String resource = "/resources/images/explorer/";
 	private JLabel icon;
+	private JLabel title;
 	private Color background = new Color(0,0,0,0);
 	private Color highlight = new Color(0xdadada);
 	private File file;
@@ -27,12 +30,24 @@ public class FileIcon extends JPanel implements MouseListener, Comparable<FileIc
 	public FileIcon(File file){
 		this.file = file;
 		icon = new JLabel();
-		this.setPreferredSize(new Dimension(98,98));
-		icon.setIcon(new ImageIcon(getIcon("file")));
+		this.setPreferredSize(new Dimension(84 ,84));
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		icon.setIcon(new ImageIcon(getIcon("file")));
+		if(file.isDirectory()){
+			icon.setIcon(new ImageIcon(getIcon("folder")));
+		}
 		this.add(icon);
-		this.add(new JLabel(file.getName()));
+		
+		title = new JLabel(file.getName());
+		title.setPreferredSize(new Dimension(64,20));
+		title.setHorizontalAlignment(JLabel.CENTER);
+		title.setToolTipText(file.getName());
+		
+		this.add(title);
 		this.setBackground(background);
+
+		title.addMouseListener(this);
+		icon.addMouseListener(this);
 		this.addMouseListener(this);
 	}
 	
