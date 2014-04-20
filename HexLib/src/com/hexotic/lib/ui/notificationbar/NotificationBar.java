@@ -4,7 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -28,6 +32,8 @@ public class NotificationBar extends JPanel{
 	private int options = 0;
 	private boolean collapsed = true;
 	
+	private List<NotificationListener> listeners = new ArrayList<NotificationListener>();
+	
 	public NotificationBar(){
 		try {
 			init();
@@ -47,10 +53,8 @@ public class NotificationBar extends JPanel{
 		if(this.collapsed){
 			for(int i = 30; i >=0 ; i--){
 				this.setPreferredSize(new Dimension(200,i));
-				try {
-					Thread.sleep(40);
-				} catch (InterruptedException e) {
-				}
+				this.revalidate();
+				this.repaint();
 			}
 		} else {
 			for(int i = 1; i <=30 ; i += i+(i/2)){
@@ -73,6 +77,8 @@ public class NotificationBar extends JPanel{
 		optionsPanel.setOptions(options);
 		this.setBackground(colors[notification.getType()]);
 		this.setBorder(BorderFactory.createLineBorder(colors[notification.getType()].darker().darker()));
+		listeners.clear();
+		listeners.add(notification.getListener());
 		setCollapsed(false);
 	}
 	
@@ -134,6 +140,16 @@ public class NotificationBar extends JPanel{
 				button.setArc(4);
 				button.showShadow(false);
 				button.setPreferredSize(new Dimension(60,20));
+				for(ActionListener l : button.getActionListeners()){
+					button.removeActionListener(l);
+				}
+				button.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						for(NotificationListener l :  listeners){
+							l.optionSelected(((SoftButton)e.getSource()).getText());
+						}
+					}
+				});
 			}
 		}
 				

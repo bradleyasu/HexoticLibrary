@@ -15,6 +15,7 @@ import com.hexotic.lib.themes.ThemeFactory;
 import com.hexotic.lib.ui.buttons.SoftButton;
 import com.hexotic.lib.ui.notificationbar.Notification;
 import com.hexotic.lib.ui.notificationbar.NotificationBar;
+import com.hexotic.lib.ui.notificationbar.NotificationListener;
 import com.hexotic.lib.ui.panels.HexPanel;
 
 public class Test extends JFrame{
@@ -40,7 +41,14 @@ public class Test extends JFrame{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			notify.showNotification(new Notification(i, Notification.OK, "TESTING"));
+			Notification notification = new Notification(i, Notification.OK, "TESTING");
+			notification.addNotificationListener(new NotificationListener(){
+				@Override
+				public void optionSelected(String option) {
+					System.out.println(option);
+				}
+			});
+			notify.showNotification(notification);
 		}
 	}
 	

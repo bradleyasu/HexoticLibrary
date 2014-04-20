@@ -13,11 +13,20 @@ public class Notification {
 	private int type = INFO;
 	private int options = 0;
 	private String message = "[]";
+	private NotificationListener listener;
 	
 	public Notification(int type, int options, String message){
 		this.type = type;
 		this.options = options;
 		this.message = message;
+	}
+	
+	public NotificationListener getListener(){
+		return listener;
+	}
+	
+	public void addNotificationListener(NotificationListener l){
+		listener = l;
 	}
 	
 	public int getType(){
