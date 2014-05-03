@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import com.hexotic.lib.ui.buttons.SoftButton;
 import com.hexotic.lib.ui.input.textfield.BubbleTextField;
+import com.hexotic.lib.ui.input.textfield.ModernTextField;
 import com.hexotic.lib.ui.panels.SimpleScroller;
 import com.hexotic.lib.ui.windows.components.FileExplorer;
 import com.hexotic.lib.ui.windows.components.FileExplorerListener;
@@ -36,8 +37,9 @@ public class IODialog extends JDialog implements ActionListener{
 	private List<File> stack = new ArrayList<File>();
 	private int stackPointer = 0;
 	private FileExplorer explorer;
-	private BubbleTextField currentPath;
-	private BubbleTextField selectedFile;
+	private ModernTextField currentPath;
+	private ModernTextField selectedFileInput;
+	private File selectedFile;
 	
 	public static void main(String[] args){
 		new IODialog(null, "test", "ign");
@@ -120,7 +122,7 @@ public class IODialog extends JDialog implements ActionListener{
 		navigation.add(backBtn);
 		navigation.add(forwardBtn);
 		
-		currentPath = new BubbleTextField();
+		currentPath = new ModernTextField();
 		currentPath.setPreferredSize(new Dimension(400, 20));
 		navigation.add(currentPath);
 		
@@ -140,13 +142,16 @@ public class IODialog extends JDialog implements ActionListener{
 		explorer.addFileExplorerListener(new FileExplorerListener(){
 			@Override
 			public void rootChanged(File file) {
-				if(file.isDirectory()){
-					stack.add(file);
-					stackPointer++;
-					currentPath.setText(file.getAbsolutePath());
-					selectedFile.setText("");
-				} else {
-					selectedFile.setText(file.getName());
+				if(file != null){
+					if(file.isDirectory()){
+						stack.add(file);
+						stackPointer++;
+						currentPath.setText(file.getAbsolutePath());
+						selectedFileInput.setText("");
+					} else {
+						selectedFileInput.setText(file.getName());
+					}
+					selectedFile = file;
 				}
 			}
 			
@@ -161,9 +166,9 @@ public class IODialog extends JDialog implements ActionListener{
 		options.setPreferredSize(new Dimension(600, 60));
 		
 		
-		selectedFile = new BubbleTextField();
-		selectedFile.setPreferredSize(new Dimension(400, 20));
-		options.add(selectedFile);  
+		selectedFileInput = new ModernTextField();
+		selectedFileInput.setPreferredSize(new Dimension(400, 20));
+		options.add(selectedFileInput);  
 		
 		
 		SoftButton open = new SoftButton("Open");
@@ -172,7 +177,10 @@ public class IODialog extends JDialog implements ActionListener{
 		open.setPreferredSize(new Dimension(100,25));
 		open.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println(explorer.getSelectedFile().getName());
+				File file = new File(selectedFileInput.getText());
+				if(file != null && file.isDirectory()){
+					explorer.setLocation(file);
+				}
 			}
 		});
 		

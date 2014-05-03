@@ -26,6 +26,7 @@ public class FileExplorer extends JPanel{
 	public void setLocation(File location){
 		this.removeAll();
 		icons.clear();
+		selectedFile = location;
 		if(location.listFiles() != null){
 			for(File file : location.listFiles()){
 				FileIcon ico = new FileIcon(file);
@@ -46,6 +47,7 @@ public class FileExplorer extends JPanel{
 				this.add(ico);
 			}
 		}
+		notifyListeners();
 		this.revalidate();
 		this.repaint();
 	}
