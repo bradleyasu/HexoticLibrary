@@ -57,7 +57,7 @@ public class FileIcon extends JPanel implements MouseListener, Comparable<FileIc
 	
 	private void notifyListeners(){
 		for(FileIconListener listener : listeners){
-			listener.FileIconSelected(new FileIconEvent(getFile()));
+			listener.FileIconSelected(new FileIconEvent(getFile(), this));
 		}
 	}
 	public void addFileIconListener(FileIconListener listener){
@@ -68,9 +68,19 @@ public class FileIcon extends JPanel implements MouseListener, Comparable<FileIc
 		return this.getClass().getResource(resource+type+".png");
 	}
 	
+	public void setSelected(boolean selected){
+		if(selected){
+			this.setBackground(highlight);
+		} else {
+			this.setBackground(background);
+		}
+		revalidate();
+		repaint();
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		this.setBackground(highlight);
+		setSelected(true);
 		notifyListeners();
 	}
 

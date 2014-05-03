@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileSystemView;
 
 import com.hexotic.lib.ui.buttons.SoftButton;
+import com.hexotic.lib.ui.input.textfield.BubbleTextField;
 import com.hexotic.lib.ui.panels.SimpleScroller;
 import com.hexotic.lib.ui.windows.components.FileExplorer;
 import com.hexotic.lib.ui.windows.components.FileExplorerListener;
@@ -35,6 +36,8 @@ public class IODialog extends JDialog implements ActionListener{
 	private List<File> stack = new ArrayList<File>();
 	private int stackPointer = 0;
 	private FileExplorer explorer;
+	private BubbleTextField currentPath;
+	private BubbleTextField selectedFile;
 	
 	public static void main(String[] args){
 		new IODialog(null, "test", "ign");
@@ -73,6 +76,7 @@ public class IODialog extends JDialog implements ActionListener{
 			public void mouseClicked(MouseEvent e) {
 				if(stackPointer>0){
 					stackPointer--;
+					currentPath.setText(stack.get(stackPointer).getAbsolutePath());
 					explorer.setLocation(stack.get(stackPointer));
 				}
 			}
@@ -96,6 +100,7 @@ public class IODialog extends JDialog implements ActionListener{
 			public void mouseClicked(MouseEvent e) {
 				if(stackPointer < stack.size()-1){
 					stackPointer++;
+					currentPath.setText(stack.get(stackPointer).getAbsolutePath());
 					explorer.setLocation(stack.get(stackPointer));
 				}
 			}
@@ -115,6 +120,11 @@ public class IODialog extends JDialog implements ActionListener{
 		navigation.add(backBtn);
 		navigation.add(forwardBtn);
 		
+		currentPath = new BubbleTextField();
+		currentPath.setPreferredSize(new Dimension(400, 20));
+		navigation.add(currentPath);
+		
+		
 		container.add(navigation, BorderLayout.NORTH);
 		
 		/* SELECTION */
@@ -124,12 +134,25 @@ public class IODialog extends JDialog implements ActionListener{
 		JScrollPane scroller = new JScrollPane(explorer);
 		scroller.getVerticalScrollBar().setUI(new SimpleScroller());
 		scroller.setBorder(BorderFactory.createLineBorder(new Color(0xdadada)));
+		scroller.getVerticalScrollBar().setPreferredSize(new Dimension(5,10));
+		scroller.getVerticalScrollBar().setUnitIncrement(20);
 		container.add(scroller, BorderLayout.CENTER);
 		explorer.addFileExplorerListener(new FileExplorerListener(){
 			@Override
 			public void rootChanged(File file) {
-				stack.add(file);
-				stackPointer++;
+				if(file.isDirectory()){
+					stack.add(file);
+					stackPointer++;
+					currentPath.setText(file.getAbsolutePath());
+					selectedFile.setText("");
+				} else {
+					selectedFile.setText(file.getName());
+				}
+			}
+			
+			@Override
+			public void fileSelected(File file){
+				
 			}
 		});
 		/* BOTTOM */
@@ -137,16 +160,34 @@ public class IODialog extends JDialog implements ActionListener{
 		options.setBackground(new Color(0xfdfdfd));
 		options.setPreferredSize(new Dimension(600, 60));
 		
+		
+		selectedFile = new BubbleTextField();
+		selectedFile.setPreferredSize(new Dimension(400, 20));
+		options.add(selectedFile);  
+		
+		
 		SoftButton open = new SoftButton("Open");
 		open.setBackgroundColor(new Color(0xf2f2f2));
 		open.setForegroundColor(new Color(0x323232));
 		open.setPreferredSize(new Dimension(100,25));
+		open.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println(explorer.getSelectedFile().getName());
+			}
+		});
+		
 		
 		SoftButton cancel = new SoftButton("Cancel");
 		cancel.setBackgroundColor(new Color(0xf2f2f2));
 		cancel.setForegroundColor(new Color(0x323232));
 		cancel.setPreferredSize(new Dimension(100,25));
-
+		
+		cancel.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				cancel();
+			}
+		});
+		
 		options.add(open);
 		options.add(cancel);
 		
@@ -154,6 +195,10 @@ public class IODialog extends JDialog implements ActionListener{
 		container.add(options, BorderLayout.SOUTH);
 		
 		getContentPane().add(container, BorderLayout.CENTER);
+	}
+	
+	public void cancel(){
+		this.dispose();
 	}
 	
 	public void actionPerformed(ActionEvent e) {

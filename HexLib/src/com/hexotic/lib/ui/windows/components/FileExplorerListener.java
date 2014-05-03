@@ -5,4 +5,6 @@ import java.io.File;
 public interface FileExplorerListener {
 
 	public void rootChanged(File file);
+	
+	public void fileSelected(File file);
 }

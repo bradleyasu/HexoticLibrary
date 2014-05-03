@@ -15,6 +15,7 @@ public class FileExplorer extends JPanel{
 
 	private File selectedFile = null;
 	private List<FileExplorerListener> listeners = new ArrayList<FileExplorerListener>();
+	private List<FileIcon> icons = new ArrayList<FileIcon>();
 	
 	public FileExplorer(File root){
 		this.setBackground(Color.WHITE);
@@ -24,16 +25,22 @@ public class FileExplorer extends JPanel{
 	
 	public void setLocation(File location){
 		this.removeAll();
+		icons.clear();
 		if(location.listFiles() != null){
 			for(File file : location.listFiles()){
 				FileIcon ico = new FileIcon(file);
+				icons.add(ico);
 				ico.addFileIconListener(new FileIconListener(){
 					public void FileIconSelected(FileIconEvent e) {
+						for(FileIcon icon : icons){
+							if(!icon.equals(e.getSource()))
+								icon.setSelected(false);
+						}
 						selectedFile = e.getFile();
 						if(selectedFile.isDirectory() && selectedFile.canRead()){
 							setLocation(selectedFile);
-							notifyListeners();
 						}
+						notifyListeners();
 					}
 				});
 				this.add(ico);
@@ -50,6 +57,7 @@ public class FileExplorer extends JPanel{
 	private void notifyListeners(){
 		for(FileExplorerListener l : listeners){
 			l.rootChanged(selectedFile);
+			l.fileSelected(selectedFile);
 		}
 	}
 	
