@@ -214,7 +214,7 @@ public class BasicSwitch extends JPanel implements Runnable{
 		g2d.setColor(foreground.darker().darker());
 		g2d.drawRoundRect(currentPos,1, getWidth()/2-4, getHeight()-3, arc, arc);
 		
-		g2d.setColor(fontColor);
+		g2d.setColor(foreground);
 		
 		g2d.setFont(font);
 		FontMetrics metrics = g2d.getFontMetrics(font);
@@ -222,14 +222,14 @@ public class BasicSwitch extends JPanel implements Runnable{
 			int StringWidth = (int)metrics.getStringBounds(offText,g2d).getWidth();
 			g2d.drawString(offText, getWidth()/4 - StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 			
-			g2d.setColor(foreground.darker().darker());
+			g2d.setColor(background);
 			StringWidth = (int)metrics.getStringBounds(onText,g2d).getWidth();
 			g2d.drawString(onText, getWidth()/2 + getWidth()/4 -  StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 		} else {
 			int StringWidth = (int)metrics.getStringBounds(onText,g2d).getWidth();
 			g2d.drawString(onText, getWidth()/2 + getWidth()/4 -  StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 			
-			g2d.setColor(foreground.darker().darker());
+			g2d.setColor(background);
 			StringWidth = (int)metrics.getStringBounds(offText,g2d).getWidth();
 			g2d.drawString(offText, getWidth()/4 - StringWidth/2,  getHeight()/2 + metrics.getHeight()/4);
 		}

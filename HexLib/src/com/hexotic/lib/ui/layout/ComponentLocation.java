@@ -43,24 +43,28 @@ public class ComponentLocation {
 	public ComponentLocation update(){
 		hasChanged = false;
 		if (x != currentX && Math.abs(x-currentX) > 1){
-			if(x < currentX){
+			if(x <= currentX){
 				currentX -= ((currentX-x)/2);
 				hasChanged = true;
 			}
-			if(x > currentX){
+			if(x >= currentX){
 				currentX += ((x-currentX)/2);
 				hasChanged = true;
 			}
+		}else if(Math.abs(x-currentX) == 1){
+			currentX = x;
 		}
 		if (y != currentY  && Math.abs(y-currentY) > 1){
-			if(y < currentY){
+			if(y <= currentY){
 				currentY -= ((currentY-y)/2);
 				hasChanged = true;
 			}
-			if(y > currentY){
+			if(y >= currentY){
 				currentY += ((y-currentY)/2);
 				hasChanged = true;
 			}
+		} else if(Math.abs(y-currentY) == 1){
+			currentY = y;
 		}
 		return this;
 	}

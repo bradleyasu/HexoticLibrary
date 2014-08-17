@@ -283,7 +283,6 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	public void actionPerformed(ActionEvent e){
 			working = true;
 			boolean done = true;
-			
 			if(queue.size() > 0){
 				for(Component c : queue){
 					components.put(c, lastLocation);

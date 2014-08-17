@@ -136,7 +136,7 @@ public class SoftButton extends JButton{
 		int stringWidth = (int)metrics.getStringBounds(text,g2d).getWidth();
 		int stringHeight = (int)metrics.getStringBounds(text,g2d).getHeight();
 		g2d.setColor(foregroundColor);
-		g2d.drawString(text, getWidth()/2 - stringWidth/2, getHeight()/2+stringHeight/4);
+		g2d.drawString(text, getWidth()/2 - stringWidth/2, getHeight()/2+stringHeight/3);
 		
 		
 	}
