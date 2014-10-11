@@ -102,6 +102,11 @@ public class SoftButton extends JButton{
 		});
 	}
 	
+	public void setSoftButtonText(String text){
+		this.text = text;
+		this.setText(text);
+	}
+	
 	
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

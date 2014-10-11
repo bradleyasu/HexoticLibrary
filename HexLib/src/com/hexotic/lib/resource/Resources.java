@@ -5,8 +5,10 @@ import java.awt.FontFormatException;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.swing.ImageIcon;
 
 public class Resources {
@@ -41,6 +43,11 @@ public class Resources {
 			instance = new Resources();
 		}
 		return instance;		
+	}
+	
+	public URL getDoc(String resource) {
+		java.net.URL document = cldr.getResource("docs/"+resource);
+		return document;
 	}
 	
 }
