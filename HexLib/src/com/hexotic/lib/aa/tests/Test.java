@@ -3,22 +3,19 @@ package com.hexotic.lib.aa.tests;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import com.hexotic.lib.switches.BasicSwitch;
-import com.hexotic.lib.themes.ThemeFactory;
-import com.hexotic.lib.ui.buttons.SoftButton;
-import com.hexotic.lib.ui.input.textfield.BasicTextField;
-import com.hexotic.lib.ui.input.textfield.BubbleTextField;
-import com.hexotic.lib.ui.input.textfield.ModernTextField;
-import com.hexotic.lib.ui.notificationbar.NotificationBar;
-import com.hexotic.lib.ui.panels.HexPanel;
+import com.hexotic.lib.ui.panels.FlipPanel;
 
 public class Test extends JFrame{
-
+	private FlipPanel flipper;
 	public static void main(String[] args){
 		new Test();
 	}
@@ -27,49 +24,40 @@ public class Test extends JFrame{
 		this.setTitle("Test");
 		this.setPreferredSize(new Dimension(500,500));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
 		this.setLayout(new BorderLayout());
-		NotificationBar notify = new NotificationBar();
-		this.add(notify, BorderLayout.NORTH);
-		softButtonTest();
+		flipPanelTest();
+		
+		JButton button = new JButton("FLIP");
+		
+		button.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				flipper.flip();
+			}
+		});
+		
+		this.add(button, BorderLayout.SOUTH);
 		
 		this.pack();
 		this.setVisible(true);
 	}
 	
-	public void softButtonTest(){
+	public void flipPanelTest(){
+		JPanel front = new JPanel();
+		front.setBackground(Color.RED);
+		front.setLayout(new BorderLayout());
+		front.add(new JLabel("FRONT PANEL"), BorderLayout.NORTH);
+		front.add(new JEditorPane(), BorderLayout.CENTER);
 		
+		JPanel back = new JPanel();
+		back.setBackground(Color.GREEN);
+		back.add(new JLabel("BACK PANEL"));
 		
-		/* Create A Custom Themed Panel using a theme from the theme factory */
+		flipper = new FlipPanel(front, back);
 		
-		HexPanel panel = new HexPanel(ThemeFactory.getInstance().getTheme(ThemeFactory.DEFAULT));
+		this.add(flipper, BorderLayout.CENTER);
 		
-		
-		
-		panel.setLayout(new FlowLayout());
-		
-		BasicTextField field = new BasicTextField();
-		field.setPreferredSize(new Dimension(400, 20));
-		panel.add(field);  
-		
-		
-		BubbleTextField bubble= new BubbleTextField();
-		bubble.setPreferredSize(new Dimension(400, 20));
-		panel.add(bubble);  
-		
-		ModernTextField modern = new ModernTextField();
-		modern.setPreferredSize(new Dimension(400, 20));
-		panel.add(modern);
-		
-		SoftButton button = new SoftButton("Test Button", Color.BLACK, Color.WHITE, new Font("Helvetica", Font.BOLD, 12));
-		button.setPreferredSize(new Dimension(100,25));
-		panel.add(button);
-		
-		BasicSwitch basic = new BasicSwitch("OFF", "ON", 100, 25, 0);
-		basic.setBackground(Color.GREEN);
-		basic.setForeground(new Color(0x484848));
-		basic.setPreferredSize(new Dimension(100, 20));
-		panel.add(basic);
-		this.add(panel);
 	}
 	
 }
