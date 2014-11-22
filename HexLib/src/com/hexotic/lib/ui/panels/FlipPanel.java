@@ -1,17 +1,14 @@
 package com.hexotic.lib.ui.panels;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -45,34 +42,48 @@ public class FlipPanel extends JPanel {
 
 		layout = new CardLayout();
 		this.setLayout(layout);
-
-		this.add(front, FRONT);
+		if (front != null) {
+			this.add(front, FRONT);
+		}
 		this.add(animationPanel, ANIMATION);
-		this.add(back, BACK);
+		if (back != null) {
+			this.add(back, BACK);
+		}
 
-		this.setPreferredSize(new Dimension(front.getWidth(), front.getHeight()));
-
+		if (front != null) {
+			this.setPreferredSize(new Dimension(front.getWidth(), front.getHeight()));
+		} else {
+			this.setPreferredSize(new Dimension(back.getWidth(), back.getHeight()));
+		}
+		this.setBackground(new Color(0,0,0,0));
+		this.setOpaque(false);
 	}
 
 	/**
 	 * Flip the panel to front or back. This will trigger the flipping animation
 	 */
 	public void flip() {
-		front.setVisible(false);
-		back.setVisible(false);
+		if (front != null) {
+			front.setVisible(false);
+		}
+		if (back != null) {
+			back.setVisible(false);
+		}
 
 		layout.show(this, ANIMATION);
 		animationPanel.animate();
 	}
 
-	private void animationFinished(){
+	private void animationFinished() {
 		if (isFlipped()) {
-			layout.show(this, BACK);
+			if (back != null)
+				layout.show(this, BACK);
 		} else {
-			layout.show(this, FRONT);
+			if (front != null)
+				layout.show(this, FRONT);
 		}
 	}
-	
+
 	public boolean isFlipped() {
 		return this.flipped;
 	}
@@ -81,7 +92,6 @@ public class FlipPanel extends JPanel {
 		JPanel visible = front;
 		if (isFlipped()) {
 			visible = back;
-			;
 		}
 		return visible;
 	}
@@ -125,8 +135,12 @@ public class FlipPanel extends JPanel {
 		}
 
 		private void setup() {
-			backImage = createImage(back);
-			frontImage = createImage(front);
+			if (back != null) {
+				backImage = createImage(back);
+			}
+			if (front != null) {
+				frontImage = createImage(front);
+			}
 			if (isFlipped()) {
 				switch (direction) {
 				case LEFT:
@@ -165,30 +179,32 @@ public class FlipPanel extends JPanel {
 		}
 
 		public void animate() {
-			setup();
-			timer.start();
+			if (!timer.isRunning()) {
+				setup();
+				timer.start();
+			}
 		}
 
 		private ActionListener createListener() {
 			ActionListener action = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
-						if (x != destx || y != desty) {
-							if (x > destx) {
-								x -= (x - destx) <= scale ? 1 : ((x - destx) / scale);
-							} else if (x < destx) {
-								x += (destx - x) <= scale ? 1 : ((destx - x) / scale);
-							}
-							if (y > desty) {
-								y -= (y - desty) <= scale ? 1 : ((y - desty) / scale);
-							} else if (y < desty) {
-								y += (desty - y)  <= scale ? 1 : ((desty - y) / scale);
-							}
-						} else {
-							timer.stop();
-							flipped = !flipped;
-							animationFinished();
+					if (x != destx || y != desty) {
+						if (x > destx) {
+							x -= (x - destx) <= scale ? 1 : ((x - destx) / scale);
+						} else if (x < destx) {
+							x += (destx - x) <= scale ? 1 : ((destx - x) / scale);
 						}
+						if (y > desty) {
+							y -= (y - desty) <= scale ? 1 : ((y - desty) / scale);
+						} else if (y < desty) {
+							y += (desty - y) <= scale ? 1 : ((desty - y) / scale);
+						}
+					} else {
+						timer.stop();
+						flipped = !flipped;
+						animationFinished();
+					}
 					revalidate();
 					repaint();
 				}
@@ -201,12 +217,15 @@ public class FlipPanel extends JPanel {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g.create();
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			backImage = createImage(back);
-			frontImage = createImage(front);
 
-			g2d.drawImage(frontImage, 0, 0, null);
-			g2d.drawImage(backImage, x, y, null);
-
+			if (front != null) {
+				frontImage = createImage(front);
+				g2d.drawImage(frontImage, 0, 0, null);
+			}
+			if (back != null) {
+				backImage = createImage(back);
+				g2d.drawImage(backImage, x, y, null);
+			}
 		}
 	}
 

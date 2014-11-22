@@ -122,7 +122,7 @@ public class IODialog extends JDialog implements ActionListener{
 		navigation.add(backBtn);
 		navigation.add(forwardBtn);
 		
-		currentPath = new ModernTextField();
+		currentPath = new ModernTextField("","Placeholder");
 		currentPath.setPreferredSize(new Dimension(400, 20));
 		navigation.add(currentPath);
 		
@@ -166,7 +166,7 @@ public class IODialog extends JDialog implements ActionListener{
 		options.setPreferredSize(new Dimension(600, 60));
 		
 		
-		selectedFileInput = new ModernTextField();
+		selectedFileInput = new ModernTextField("", "");
 		selectedFileInput.setPreferredSize(new Dimension(400, 20));
 		options.add(selectedFileInput);  
 		

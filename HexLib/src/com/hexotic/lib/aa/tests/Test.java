@@ -3,6 +3,7 @@ package com.hexotic.lib.aa.tests;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.hexotic.lib.ui.input.textfield.ModernTextField;
 import com.hexotic.lib.ui.panels.FlipPanel;
 
 public class Test extends JFrame{
@@ -29,7 +31,6 @@ public class Test extends JFrame{
 		flipPanelTest();
 		
 		JButton button = new JButton("FLIP");
-		
 		button.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -51,10 +52,16 @@ public class Test extends JFrame{
 		front.add(new JEditorPane(), BorderLayout.CENTER);
 		
 		JPanel back = new JPanel();
-		back.setBackground(Color.GREEN);
+		//back.setBackground(Color.GREEN);
 		back.add(new JLabel("BACK PANEL"));
+	
+		ModernTextField field = new ModernTextField("", "Placeholder");
+		field.setPreferredSize(new Dimension(400, 30));
+		field.setFont(new Font("Arial", Font.BOLD, 16));
+		back.add(field);
 		
 		flipper = new FlipPanel(front, back);
+		flipper.setDirection(FlipPanel.LEFT);
 		
 		this.add(flipper, BorderLayout.CENTER);
 		
