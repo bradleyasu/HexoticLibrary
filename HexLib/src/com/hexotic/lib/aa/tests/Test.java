@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 
 import com.hexotic.lib.ui.buttons.SoftButton;
 import com.hexotic.lib.ui.input.textfield.ModernTextField;
-import com.hexotic.lib.ui.loaders.ProgressCircle;
 import com.hexotic.lib.ui.loaders.ProgressListener;
+import com.hexotic.lib.ui.loaders.ToxicProgress;
 import com.hexotic.lib.ui.panels.FlipPanel;
 
 public class Test extends JFrame{
@@ -29,7 +29,7 @@ public class Test extends JFrame{
 	
 	public Test(){
 		this.setTitle("Test");
-		this.setPreferredSize(new Dimension(500,500));
+		this.setPreferredSize(new Dimension(40,1000));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 		this.setLayout(new BorderLayout());
@@ -80,17 +80,29 @@ public class Test extends JFrame{
 	
 	private class TestPanel extends JPanel {
 		
-		private ProgressCircle progress;
+		private ToxicProgress progress;
 		
 		public TestPanel() {
-			progress = new ProgressCircle();
-			progress.setColor(new Color(0x424242), new Color(0x484848));
+			progress = new ToxicProgress();
 			progress.cycle();
 			this.setPreferredSize(new Dimension(250,250));
-			progress.setProgress(100);
-			progress.setFont(new Font("Arial", Font.BOLD, 16));
+			progress.setProgress(0);
 			progress.showText(false);
-			
+
+			Thread t = new Thread(new Runnable(){
+				public void run(){
+					while(progress.getProgress() < 100){
+						progress.setProgress(progress.getProgress()+2);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+			t.start();
 			progress.addProgressListener(new ProgressListener(){
 
 				@Override
@@ -99,7 +111,7 @@ public class Test extends JFrame{
 				}
 				
 			});
-			this.setBackground(Color.gray);
+			this.setBackground(Color.WHITE);
 			
 		}
 		
