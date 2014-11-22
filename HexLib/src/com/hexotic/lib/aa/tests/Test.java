@@ -4,16 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.hexotic.lib.ui.buttons.SoftButton;
 import com.hexotic.lib.ui.input.textfield.ModernTextField;
+import com.hexotic.lib.ui.loaders.ProgressCircle;
+import com.hexotic.lib.ui.loaders.ProgressListener;
 import com.hexotic.lib.ui.panels.FlipPanel;
 
 public class Test extends JFrame{
@@ -30,7 +35,10 @@ public class Test extends JFrame{
 		this.setLayout(new BorderLayout());
 		flipPanelTest();
 		
-		JButton button = new JButton("FLIP");
+		SoftButton button = new SoftButton("FLIP");
+		button.setArc(2);
+		button.setBackgroundColor(new Color(0x212121));
+		button.setForegroundColor(new Color(0xdfdfdf));
 		button.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -59,11 +67,55 @@ public class Test extends JFrame{
 		field.setPreferredSize(new Dimension(400, 30));
 		field.setFont(new Font("Arial", Font.BOLD, 16));
 		back.add(field);
+		back.setLayout(new BorderLayout());
+		back.add(new TestPanel(), BorderLayout.CENTER);
 		
 		flipper = new FlipPanel(front, back);
 		flipper.setDirection(FlipPanel.LEFT);
 		
 		this.add(flipper, BorderLayout.CENTER);
+		
+	}
+	
+	
+	private class TestPanel extends JPanel {
+		
+		private ProgressCircle progress;
+		
+		public TestPanel() {
+			progress = new ProgressCircle();
+			progress.setColor(new Color(0x424242), new Color(0x484848));
+			progress.cycle();
+			this.setPreferredSize(new Dimension(250,250));
+			progress.setProgress(100);
+			progress.setFont(new Font("Arial", Font.BOLD, 16));
+			progress.showText(false);
+			
+			progress.addProgressListener(new ProgressListener(){
+
+				@Override
+				public void progressUpdated(double progress) {
+					update();
+				}
+				
+			});
+			this.setBackground(Color.gray);
+			
+		}
+		
+		private void update(){
+			this.revalidate();
+			this.repaint();
+		}
+		
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+			progress.Draw(g, 10,10, getWidth()-20, getHeight()-20);
+		}
 		
 	}
 	
