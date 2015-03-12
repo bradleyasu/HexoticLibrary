@@ -20,16 +20,20 @@ public class ToxicProgress extends ProgressLoader{
 
     private int yScale  = 0;
     private int yBase   = yScale;
-    private Color color = new Color(0xffffff);
+    private Color color = new Color(0xff0066);
 	private boolean reverse = false;
 	
-	private int upperLimit = 12;
+	private int upperLimit = 2;
 	private int lowerLimit = -2;
 	private List<Bubble> bubbles;
 	private Random bubbleRandomizer = new Random();
 	public ToxicProgress() {
 		
 		bubbles = new ArrayList<Bubble>();
+	}
+	
+	public void setColor(Color color){
+		this.color = color;
 	}
 	
 	public void cycle() {
@@ -114,8 +118,10 @@ public class ToxicProgress extends ProgressLoader{
         double percentage = getProgress()/100 * height;
         for( int i=startX; i < width+startX; i++ )
         {   x = i;
-            y = (int)( height - percentage + yBase - Math.sin( Math.toRadians(i) ) * yScale ) + startY;
+            y = (int)( height - percentage + yBase - Math.cos( Math.toRadians(i/2) ) * yScale ) + startY;
+//            y = (int) (height - percentage);
             g2.drawLine( x, y, x, y );
+            
            	g2.drawLine(x, y, x, height+startY);
         }
         
@@ -146,7 +152,7 @@ public class ToxicProgress extends ProgressLoader{
 		
 		private int x;
 		private int y;
-		private int size = 10;
+		private int size = 5;
 		private int wobble = size;
 		private int rightLim;
 		private int leftLim;
@@ -176,9 +182,14 @@ public class ToxicProgress extends ProgressLoader{
 		}
 		
 		public void reset() {
-			x = bubbleRandomizer.nextInt(startX);
+			if(startX > 0) {
+				x = bubbleRandomizer.nextInt(startX);
+			} else {
+				x = startX;
+			}
 			y = startY;
 		}
+		
 		
 		public void move() {
 			y-=size;

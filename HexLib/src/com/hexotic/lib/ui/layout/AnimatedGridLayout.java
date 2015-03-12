@@ -34,7 +34,7 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	private int refreshRate = 10;
 	private ComponentLocation lastLocation = null;
 	private boolean working = false;
-	
+
 	private Timer timer = new Timer(refreshRate, this);
 
 	private List<Component> queue = new ArrayList<Component>();
@@ -85,22 +85,20 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 		this.vgap = vgap;
 		this.hgap = hgap;
 		if (ordered) {
-			components = Collections
-					.synchronizedMap(new TreeMap<Component, ComponentLocation>());
+			components = Collections.synchronizedMap(new TreeMap<Component, ComponentLocation>());
 		} else {
-			components = Collections
-					.synchronizedMap(new HashMap<Component, ComponentLocation>());
+			components = Collections.synchronizedMap(new HashMap<Component, ComponentLocation>());
 		}
 	}
 
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
-		
+
 	}
 
 	@Override
 	public void layoutContainer(Container parent) {
-		if(parent.getWidth() <= minWidth){
+		if (parent.getWidth() <= minWidth) {
 			return;
 		}
 		Insets insets = parent.getInsets();
@@ -127,15 +125,12 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 				}
 				if (rowCount > 0) {
 					if (prevStac.size() != compCount - colCount) {
-						y = prevStac.get(compCount - colCount).getHeight()
-								+ vgap
-								+ prevStac.get(compCount - colCount).getY();
+						y = prevStac.get(compCount - colCount).getHeight() + vgap + prevStac.get(compCount - colCount).getY();
 						components.get(comp).setY(y);
 					}
 				}
 				Dimension d = comp.getPreferredSize();
-				components.get(comp).setX(x).setY(y).setWidth(d.width)
-						.setHeight(d.height);
+				components.get(comp).setX(x).setY(y).setWidth(d.width).setHeight(d.height);
 				x += components.get(comp).getWidth() + hgap;
 				compCount++;
 				prevStac.add(components.get(comp));
@@ -199,12 +194,14 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 		int[] next = nextXY(d.width, d.height, minWidth);
 		lastLocation = new ComponentLocation(next[0], next[1], d.width, d.height);
 
-		if(!working){
-			for(Component c : queue){
-				components.put(c, lastLocation);
-				Dimension de = c.getPreferredSize();
-				int[] ne = nextXY(de.width, de.height, minWidth);
-				lastLocation = new ComponentLocation(ne[0], ne[1], de.width, de.height);
+		if (!working) {
+			for (Component c : queue) {
+				if (c.isVisible()) {
+					components.put(c, lastLocation);
+					Dimension de = c.getPreferredSize();
+					int[] ne = nextXY(de.width, de.height, minWidth);
+					lastLocation = new ComponentLocation(ne[0], ne[1], de.width, de.height);
+				}
 			}
 			components.put(comp, lastLocation);
 			queue.clear();
@@ -232,6 +229,7 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	@Override
 	public void invalidateLayout(Container target) {
 		// TODO Auto-generated method stub
+		layoutContainer(target);
 		timer.start();
 		target.repaint();
 	}
@@ -280,37 +278,37 @@ public class AnimatedGridLayout implements LayoutManager2, ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e){
-			working = true;
-			boolean done = true;
-			if(queue.size() > 0){
-				for(Component c : queue){
+	public void actionPerformed(ActionEvent e) {
+		working = true;
+		boolean done = true;
+		if (queue.size() > 0) {
+			for (Component c : queue) {
+				if (c.isVisible()) {
 					components.put(c, lastLocation);
 					Dimension de = c.getPreferredSize();
 					int[] ne = nextXY(de.width, de.height, minWidth);
 					lastLocation = new ComponentLocation(ne[0], ne[1], de.width, de.height);
 				}
-				queue.clear();
 			}
-			
-			for (Component comp : components.keySet()) {
-				if (comp.isVisible()) {
-					ComponentLocation loc = components.get(comp).update();
-					comp.setBounds(loc.getCurrentX(),
-							loc.getCurrentY(), loc.getWidth(),
-							loc.getHeight());
-					if(!loc.hasChanged()){
-						done = true;
-					} else {
-						done = false;
-					}
-					comp.revalidate();
-					comp.repaint();
+			queue.clear();
+		}
+
+		for (Component comp : components.keySet()) {
+			if (comp.isVisible()) {
+				ComponentLocation loc = components.get(comp).update();
+				comp.setBounds(loc.getCurrentX(), loc.getCurrentY(), loc.getWidth(), loc.getHeight());
+				if (!loc.hasChanged()) {
+					done = true;
+				} else {
+					done = false;
 				}
+				comp.revalidate();
+				comp.repaint();
 			}
-			if(done){
-				timer.stop();
-			}
-			working = false;
+		}
+		if (done) {
+			timer.stop();
+		}
+		working = false;
 	}
 }

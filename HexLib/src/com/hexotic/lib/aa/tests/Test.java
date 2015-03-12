@@ -3,6 +3,7 @@ package com.hexotic.lib.aa.tests;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,7 +30,7 @@ public class Test extends JFrame{
 	
 	public Test(){
 		this.setTitle("Test");
-		this.setPreferredSize(new Dimension(40,1000));
+		this.setPreferredSize(new Dimension(800,1000));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 		this.setLayout(new BorderLayout());
@@ -60,15 +61,13 @@ public class Test extends JFrame{
 		front.add(new JEditorPane(), BorderLayout.CENTER);
 		
 		JPanel back = new JPanel();
-		//back.setBackground(Color.GREEN);
 		back.add(new JLabel("BACK PANEL"));
-	
 		ModernTextField field = new ModernTextField("", "Placeholder");
 		field.setPreferredSize(new Dimension(400, 30));
 		field.setFont(new Font("Arial", Font.BOLD, 16));
+		back.setLayout(new FlowLayout());
 		back.add(field);
-		back.setLayout(new BorderLayout());
-		back.add(new TestPanel(), BorderLayout.CENTER);
+		back.add(new TestPanel());
 		
 		flipper = new FlipPanel(front, back);
 		flipper.setDirection(FlipPanel.LEFT);
@@ -85,16 +84,23 @@ public class Test extends JFrame{
 		public TestPanel() {
 			progress = new ToxicProgress();
 			progress.cycle();
-			this.setPreferredSize(new Dimension(250,250));
+			this.setPreferredSize(new Dimension(50,250));
 			progress.setProgress(0);
 			progress.showText(false);
-
+			progress.setColor(new Color(0x8a0707));
+			
 			Thread t = new Thread(new Runnable(){
 				public void run(){
-					while(progress.getProgress() < 100){
-						progress.setProgress(progress.getProgress()+2);
+					try {
+						Thread.sleep(4000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					while(progress.getProgress() < 99){
+						progress.setProgress(progress.getProgress()+1);
 						try {
-							Thread.sleep(1000);
+							Thread.sleep(50);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -111,7 +117,6 @@ public class Test extends JFrame{
 				}
 				
 			});
-			this.setBackground(Color.WHITE);
 			
 		}
 		
@@ -126,7 +131,7 @@ public class Test extends JFrame{
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			progress.Draw(g, 10,10, getWidth()-20, getHeight()-20);
+			progress.Draw(g, 0,0, getWidth(), getHeight());
 		}
 		
 	}
