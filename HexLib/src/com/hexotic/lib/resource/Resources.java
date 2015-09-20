@@ -3,6 +3,7 @@ package com.hexotic.lib.resource;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+
+import com.hexotic.lib.exceptions.ResourceException;
 
 public class Resources {
 
@@ -21,14 +24,23 @@ public class Resources {
 		images = new HashMap<String, Image>();
 	}
 	
-	public Image getImage(String resource){
+	public Image getImage(String resource) throws ResourceException{
 		resource = resource.toLowerCase();
 		Image image = null;
+		URL iconPth = null;
 		if(images.containsKey(resource)){ /* To avoid reading from disk over and over, we'll get it from RAM if we can */
 			image = images.get(resource);
-		} 
-		java.net.URL iconPth   = cldr.getResource("images/"+resource);
-		image = new ImageIcon(iconPth).getImage();
+		} else {
+			iconPth   = cldr.getResource("images/"+resource);
+			if(iconPth == null){
+				throw(new ResourceException("Class Loader Resource Not Found - "+cldr.getResource(".")));
+			}
+			image = new ImageIcon(iconPth).getImage();
+				
+		}
+		if(image == null){
+			throw(new ResourceException("Image Not Found: " + ((iconPth == null) ? "NULL" : iconPth.getPath())));
+		}
 		return image;
 	}
 	
