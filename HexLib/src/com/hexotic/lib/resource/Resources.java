@@ -61,5 +61,11 @@ public class Resources {
 		java.net.URL document = cldr.getResource("docs/"+resource);
 		return document;
 	}
+
+	
+	public URL getAudio(String resource) {
+		java.net.URL audioUrl = cldr.getResource("audio/"+resource);
+		return audioUrl;
+	}
 	
 }

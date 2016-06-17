@@ -39,7 +39,7 @@ public class Test extends JFrame{
 		SoftButton button = new SoftButton("FLIP");
 		button.setArc(2);
 		button.setBackgroundColor(new Color(0x212121));
-		button.setForegroundColor(new Color(0xdfdfdf));
+		button.setForegroundColor(new Color(0xdfdfdf));  
 		button.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
