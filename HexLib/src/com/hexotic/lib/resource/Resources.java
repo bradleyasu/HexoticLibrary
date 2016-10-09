@@ -3,9 +3,10 @@ package com.hexotic.lib.resource;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
-import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,5 +68,21 @@ public class Resources {
 		java.net.URL audioUrl = cldr.getResource("audio/"+resource);
 		return audioUrl;
 	}
+	
+	  public void installFile(String exec, String outputPath) throws IOException
+	  {
+	    InputStream is = this.cldr.getResource("execs/" + exec).openStream();
+	    
+	    OutputStream os = new FileOutputStream(outputPath);
+	    
+	    byte[] b = new byte['?'];
+	    int length;
+	    while ((length = is.read(b)) != -1)
+	    {
+	      os.write(b, 0, length);
+	    }
+	    is.close();
+	    os.close();
+	  }
 	
 }
